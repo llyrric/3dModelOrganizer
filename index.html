@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Printing Library Gallery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: rgba(18, 25, 42, 0.85);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --accent: #38bdf8;
+      --accent-hover: #0ea5e9;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --tag-bg: rgba(56, 189, 248, 0.15);
+      --tag-border: rgba(56, 189, 248, 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      background-image: radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 90%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    header {
+      max-width: 1600px;
+      margin: 0 auto 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .stats-bar {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 0.5rem 1.1rem;
+      border-radius: 9999px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      backdrop-filter: blur(10px);
+    }
+    .stat-pill span {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Category Filter Buttons */
+    .category-chips {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding: 0.5rem 0;
+      scrollbar-width: thin;
+    }
+
+    .chip-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .chip-btn:hover {
+      background: rgba(56, 189, 248, 0.2);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    .chip-btn.active {
+      background: var(--accent);
+      color: #0b0f19;
+      border-color: var(--accent);
+      font-weight: 700;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    }
+
+    .search-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 320px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.9rem 1.25rem;
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+    }
+
+    .sort-select {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.9rem 1.25rem;
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Toolbar Controls & Segmented Controls */
+    .controls-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      background: rgba(18, 25, 42, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1rem 1.25rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+    }
+
+    .controls-row-top {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .controls-row-bottom {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .control-cluster {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .control-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .control-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .segmented-control {
+      display: inline-flex;
+      background: #0d1322;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 3px;
+    }
+
+    .seg-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 0.5rem 0.85rem;
+      border-radius: 7px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .seg-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .seg-btn.active {
+      background: var(--accent);
+      color: #0b0f19;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.35);
+    }
+
+    .seg-btn .size-tag {
+      font-size: 0.7rem;
+      opacity: 0.85;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+    }
+
+    .toggle-filter-btn {
+      background: #0d1322;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      padding: 0.55rem 1rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .toggle-filter-btn:hover {
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .toggle-filter-btn.active {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+    }
+
+    .active-filter-indicator {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Grid Layout & Thumbnail Sizing System */
+    :root {
+      --grid-card-min: 420px;
+    }
+
+    body.size-sm {
+      --grid-card-min: 420px;
+    }
+
+    body.size-md {
+      --grid-card-min: 480px;
+    }
+
+    body.size-lg {
+      --grid-card-min: 540px;
+    }
+
+    body.size-xl {
+      --grid-card-min: 620px;
+    }
+
+    main {
+      max-width: 1650px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(var(--grid-card-min), 1fr));
+      gap: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    main.view-rows {
+      grid-template-columns: 1fr;
+    }
+
+    .creator-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .creator-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(56, 189, 248, 0.5);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding-bottom: 0.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .creator-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+
+    .category-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      color: var(--accent);
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .file-counts {
+      display: flex;
+      gap: 1.25rem;
+      font-size: 0.88rem;
+      color: #94a3b8;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .file-counts span b {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .models-list-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .models-list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94a3b8;
+    }
+
+    /* Small (64px) & Medium (110px) Row Styles */
+    body.size-sm .items-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-height: 440px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      padding-right: 0.35rem;
+    }
+
+    body.size-md .items-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      max-height: 520px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      padding-right: 0.35rem;
+    }
+
+    body.size-sm .model-item-row,
+    body.size-md .model-item-row {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      background: #0d1322;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+      padding: 0.5rem 0.75rem;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+    }
+
+    body.size-md .model-item-row {
+      gap: 1.1rem;
+      padding: 0.65rem 0.9rem;
+      border-radius: 12px;
+    }
+
+    body.size-sm .model-item-row:hover,
+    body.size-md .model-item-row:hover {
+      background: #162035;
+      border-color: rgba(56, 189, 248, 0.4);
+      transform: translateX(2px);
+    }
+
+    body.size-sm .item-thumb-wrapper {
+      width: 64px;
+      height: 64px;
+      flex-shrink: 0;
+      border-radius: 8px;
+    }
+
+    body.size-md .item-thumb-wrapper {
+      width: 110px;
+      height: 110px;
+      flex-shrink: 0;
+      border-radius: 10px;
+    }
+
+    body.size-md .item-name {
+      font-size: 0.92rem;
+      line-height: 1.38;
+    }
+
+    /* Large (180px) & Extra Large (260px) Card Showcase Subgrid */
+    body.size-lg .items-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.75rem;
+      max-height: 600px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      padding-right: 0.35rem;
+    }
+
+    body.size-xl .items-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1rem;
+      max-height: 720px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      padding-right: 0.35rem;
+    }
+
+    body.size-lg .model-item-row,
+    body.size-xl .model-item-row {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      background: #0d1322;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 0.65rem;
+      gap: 0.6rem;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body.size-xl .model-item-row {
+      padding: 0.85rem;
+      gap: 0.75rem;
+      border-radius: 14px;
+    }
+
+    body.size-lg .model-item-row:hover,
+    body.size-xl .model-item-row:hover {
+      background: #141c2e;
+      border-color: rgba(56, 189, 248, 0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.5);
+    }
+
+    body.size-lg .item-thumb-wrapper,
+    body.size-xl .item-thumb-wrapper {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      height: auto;
+      border-radius: 9px;
+    }
+
+    body.size-lg .item-info,
+    body.size-xl .item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    body.size-lg .item-name {
+      font-size: 0.8rem;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    body.size-xl .item-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Common Item Thumb & Placeholder Styling */
+    .item-thumb-wrapper {
+      overflow: hidden;
+      background: #080c16;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .item-thumb-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #080c16;
+      display: block;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .item-thumb-wrapper:hover img {
+      transform: scale(1.08);
+    }
+
+    .item-no-thumb {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-size: 0.65rem;
+      text-align: center;
+      line-height: 1.2;
+      padding: 0.4rem;
+      background: #0e1424;
+    }
+
+    body.size-md .item-no-thumb svg { width: 28px; height: 28px; }
+    body.size-md .item-no-thumb span { font-size: 0.75rem; }
+
+    body.size-lg .item-no-thumb svg { width: 38px; height: 38px; }
+    body.size-lg .item-no-thumb span { font-size: 0.82rem; }
+
+    body.size-xl .item-no-thumb svg { width: 50px; height: 50px; }
+    body.size-xl .item-no-thumb span { font-size: 0.92rem; }
+
+    .item-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .item-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #f1f5f9;
+      font-weight: 500;
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.35;
+    }
+
+    .item-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      color: #64748b;
+      font-family: 'JetBrains Mono', monospace;
+      flex-wrap: wrap;
+    }
+
+    .ext-badge {
+      display: inline-block;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+    }
+
+    .ext-badge.zip { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+    .ext-badge.sevenz { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+    .ext-badge.rar { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+    .ext-badge.stl { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+
+    .release-date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.12rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Detailed Rows View Mode Overrides */
+    main.view-rows {
+      grid-template-columns: 1fr;
+    }
+
+    main.view-rows .creator-card {
+      padding: 1.6rem;
+    }
+
+    main.view-rows .items-container {
+      max-height: none;
+    }
+
+    body.size-sm main.view-rows .items-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+      gap: 0.75rem;
+    }
+
+    body.size-md main.view-rows .items-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+      gap: 0.85rem;
+    }
+
+    body.size-lg main.view-rows .items-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.85rem;
+    }
+
+    body.size-xl main.view-rows .items-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.15rem;
+    }
+
+    /* App Navigation Bar (Back, Forward, Breadcrumbs) */
+    .app-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      background: rgba(18, 25, 42, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.65rem 1.1rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 15px -2px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-history-buttons {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-arrow-btn {
+      background: #0d1322;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .nav-arrow-btn:hover:not(:disabled) {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+    }
+
+    .nav-arrow-btn:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-breadcrumbs {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .crumb-item {
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-weight: 500;
+    }
+
+    .crumb-item:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .crumb-item.active {
+      color: #ffffff;
+      font-weight: 700;
+      cursor: default;
+      text-decoration: none;
+    }
+
+    .crumb-separator {
+      color: rgba(255, 255, 255, 0.25);
+      font-size: 0.75rem;
+    }
+
+    /* Open Collection Button in Card Header */
+    .open-collection-btn {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--accent);
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .open-collection-btn:hover {
+      background: var(--accent);
+      color: #0b0f19;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.45);
+      transform: translateX(2px);
+    }
+
+    .card-header-clickable {
+      cursor: pointer;
+      transition: color 0.15s ease;
+    }
+
+    .card-header-clickable:hover .creator-name {
+      color: var(--accent);
+    }
+
+    /* Single Collection Detail View */
+    .single-collection-hero {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      margin-bottom: 1.5rem;
+    }
+
+    .single-hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .single-hero-title-area {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .single-hero-title {
+      font-size: 1.85rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.2;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .single-hero-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-nav-btn {
+      background: #0d1322;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e1;
+      padding: 0.5rem 0.95rem;
+      border-radius: 9px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .hero-nav-btn:hover:not(:disabled) {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+
+    .hero-nav-btn:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+    }
+
+    .hero-nav-btn.primary {
+      background: var(--accent);
+      color: #0b0f19;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    .hero-nav-btn.primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .hero-position-pill {
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      background: #090e1a;
+      padding: 0.45rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      white-space: nowrap;
+    }
+
+    .single-collection-filter-bar {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .single-collection-filter-input {
+      flex: 1;
+      min-width: 280px;
+      background: #0d1322;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 0.65rem 1rem;
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .single-collection-filter-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
+    }
+
+    .single-collection-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      width: 100%;
+    }
+
+    /* Multi-Size Layout in Single Collection View */
+    body.size-sm .single-collection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+      gap: 0.75rem;
+    }
+
+    body.size-md .single-collection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+      gap: 0.9rem;
+    }
+
+    body.size-lg .single-collection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    body.size-xl .single-collection-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 2rem;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-box {
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      background: #161e31;
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+    }
+
+    .modal-box img {
+      max-width: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .modal-caption {
+      font-size: 0.95rem;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+      word-break: break-all;
+    }
+
+    .pagination-bar {
+      max-width: 1600px;
+      margin: 2.5rem auto 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .page-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: #ffffff;
+      padding: 0.55rem 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .page-btn.active {
+      background: var(--accent);
+      color: #0b0f19;
+      font-weight: 700;
+    }
+
+    .page-btn:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title-row">
+      <div>
+        <h1>3D Model Library Gallery</h1>
+        <p style="color: var(--text-muted); margin-top: 0.25rem;">Directory: X:\3d files\3d files &bull; Visual Showcase with In-Zip Render Extraction & 3D STL Renders</p>
+      </div>
+      <div class="stats-bar">
+        <div class="stat-pill"><span id="stat-collections">0</span> Collections</div>
+        <div class="stat-pill"><span id="stat-files">0</span> Files</div>
+        <div class="stat-pill"><span id="stat-previews">0</span> Previews</div>
+      </div>
+    </div>
+
+    <!-- In-App Navigation Bar (Forward / Back / Breadcrumbs) -->
+    <nav class="app-nav-bar" id="app-nav-bar" aria-label="Library Navigation">
+      <div class="nav-history-buttons">
+        <button type="button" class="nav-arrow-btn" id="nav-btn-back" onclick="navigateHistoryBack()" title="Go Back in browsing history" disabled>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          <span>Back</span>
+        </button>
+        <button type="button" class="nav-arrow-btn" id="nav-btn-forward" onclick="navigateHistoryForward()" title="Go Forward in browsing history" disabled>
+          <span>Forward</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+      <div class="nav-breadcrumbs" id="nav-breadcrumbs">
+        <span class="crumb-item active">All Collections</span>
+      </div>
+    </nav>
+
+    <div class="category-chips" id="category-chips">
+      <button class="chip-btn active" data-cat="ALL">All Categories</button>
+    </div>
+
+    <div class="controls-panel">
+      <!-- Top Row: Search, Sort, Previews Only -->
+      <div class="controls-row-top">
+        <input type="text" id="search-input" class="search-input" placeholder="Search by studio, troop, army, vehicle, or model name...">
+        <select id="sort-select" class="sort-select">
+          <option value="name-asc">Sort: Name (A-Z)</option>
+          <option value="name-desc">Sort: Name (Z-A)</option>
+          <option value="release-desc">Sort: Release Date (Newest)</option>
+          <option value="release-asc">Sort: Release Date (Oldest)</option>
+          <option value="previews-desc">Sort: Most Previews First</option>
+          <option value="files-desc">Sort: Most Files First</option>
+        </select>
+        <button id="filter-previews-btn" class="toggle-filter-btn" onclick="togglePreviewsFilter()" title="Show only models with render previews">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+          <span>With Previews Only</span>
+        </button>
+      </div>
+
+      <!-- Bottom Row: Thumbnail Size options + Layout options + Summary -->
+      <div class="controls-row-bottom">
+        <div class="control-cluster">
+          <div class="control-group">
+            <span class="control-label">Thumbnail Size:</span>
+            <div class="segmented-control" id="size-segmented-control" role="group" aria-label="Thumbnail size options">
+              <button type="button" class="seg-btn active" id="btn-size-sm" onclick="setThumbSize('sm')" title="Compact 64px list thumbnails">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
+                Small <span class="size-tag">64px</span>
+              </button>
+              <button type="button" class="seg-btn" id="btn-size-md" onclick="setThumbSize('md')" title="Medium 110px clear thumbnails">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8"></rect><rect x="13" y="3" width="8" height="8"></rect><rect x="3" y="13" width="8" height="8"></rect><rect x="13" y="13" width="8" height="8"></rect></svg>
+                Medium <span class="size-tag">110px</span>
+              </button>
+              <button type="button" class="seg-btn" id="btn-size-lg" onclick="setThumbSize('lg')" title="Large 180px visual card grid">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="18" rx="2"></rect><rect x="13" y="3" width="8" height="18" rx="2"></rect></svg>
+                Large <span class="size-tag">180px</span>
+              </button>
+              <button type="button" class="seg-btn" id="btn-size-xl" onclick="setThumbSize('xl')" title="Extra Large 260px hero showcase renders">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect></svg>
+                Extra Large <span class="size-tag">260px</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <span class="control-label">Layout:</span>
+            <div class="segmented-control" role="group" aria-label="Layout view mode">
+              <button type="button" id="view-cards-btn" class="seg-btn active" onclick="setViewMode('cards')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Card Grid
+              </button>
+              <button type="button" id="view-rows-btn" class="seg-btn" onclick="setViewMode('rows')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                Detailed Rows
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="active-filter-indicator" id="filter-indicator"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="library-grid"></main>
+  <div id="single-collection-container" style="display: none; max-width: 1650px; margin: 0 auto; width: 100%;"></div>
+  <div class="pagination-bar" id="pagination-bar"></div>
+
+  <!-- Modal for full preview view -->
+  <div class="modal-overlay" id="image-modal" onclick="closeModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.8rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent);">3D Render Full Preview</span>
+        <button type="button" onclick="closeModal()" style="background:transparent; border:none; color:#cbd5e1; font-size:1.5rem; cursor:pointer; line-height:1; padding:0.2rem 0.6rem; border-radius:6px; transition:color 0.15s ease;" title="Close (Esc)">&times;</button>
+      </div>
+      <img id="modal-img" src="" alt="Enlarged render preview">
+      <div class="modal-caption" id="modal-caption"></div>
+    </div>
+  </div>
+
+  <script src="./library_data.js"></script>
+  <script>
+    let activeCategory = 'ALL';
+    let libraryMetadata = {};
+
+    function getCollectionReleaseDate(item) {
+      const names = (item.Items && item.Items.length > 0) ? item.Items.map(it => it.name) : (item.Samples || []);
+      let dates = [];
+      for (const n of names) {
+        const meta = libraryMetadata[n];
+        if (meta && meta.releaseDate && meta.releaseDate !== 'UNKNOWN') {
+          dates.push(meta.releaseDate);
+        }
+      }
+      if (dates.length > 0) {
+        dates.sort();
+        return dates[dates.length - 1];
+      }
+      return '';
+    }
+    let currentPage = 1;
+    const itemsPerPage = 42;
+    let currentThumbSize = localStorage.getItem('3d_gallery_thumb_size') || 'sm';
+    let currentViewMode = localStorage.getItem('3d_gallery_view_mode') || 'cards';
+    let onlyPreviewsFilter = localStorage.getItem('3d_gallery_only_previews') === 'true';
+
+    // Navigation and Single Collection state
+    let activeCollection = null;
+    let singleCollectionSearchQuery = '';
+    let appHistory = [];
+    let appHistoryIndex = -1;
+
+    function setThumbSize(size) {
+      if (!['sm', 'md', 'lg', 'xl'].includes(size)) size = 'sm';
+      currentThumbSize = size;
+      localStorage.setItem('3d_gallery_thumb_size', size);
+
+      // Set class on document.body
+      document.body.classList.remove('size-sm', 'size-md', 'size-lg', 'size-xl');
+      document.body.classList.add(`size-${size}`);
+
+      // Update button active state
+      ['sm', 'md', 'lg', 'xl'].forEach(s => {
+        const btn = document.getElementById(`btn-size-${s}`);
+        if (btn) btn.classList.toggle('active', s === size);
+      });
+    }
+
+    function setViewMode(mode) {
+      currentViewMode = mode;
+      localStorage.setItem('3d_gallery_view_mode', mode);
+      const cardsBtn = document.getElementById('view-cards-btn');
+      const rowsBtn = document.getElementById('view-rows-btn');
+      if (cardsBtn) cardsBtn.classList.toggle('active', mode === 'cards');
+      if (rowsBtn) rowsBtn.classList.toggle('active', mode === 'rows');
+      const grid = document.getElementById('library-grid');
+      if (grid) grid.classList.toggle('view-rows', mode === 'rows');
+    }
+
+    function togglePreviewsFilter() {
+      onlyPreviewsFilter = !onlyPreviewsFilter;
+      localStorage.setItem('3d_gallery_only_previews', onlyPreviewsFilter);
+      const btn = document.getElementById('filter-previews-btn');
+      if (btn) btn.classList.toggle('active', onlyPreviewsFilter);
+
+      if (activeCollection) {
+        renderSingleCollection();
+      } else {
+        currentPage = 1;
+        renderGrid();
+      }
+    }
+
+    function updateNavUI() {
+      const backBtn = document.getElementById('nav-btn-back');
+      const fwdBtn = document.getElementById('nav-btn-forward');
+      if (backBtn) backBtn.disabled = (appHistoryIndex <= 0 && !activeCollection);
+      if (fwdBtn) fwdBtn.disabled = (appHistoryIndex >= appHistory.length - 1);
+
+      const breadcrumbs = document.getElementById('nav-breadcrumbs');
+      if (!breadcrumbs) return;
+
+      if (!activeCollection) {
+        if (activeCategory === 'ALL') {
+          breadcrumbs.innerHTML = `<span class="crumb-item active">All Collections</span>`;
+        } else {
+          breadcrumbs.innerHTML = `
+            <span class="crumb-item" onclick="selectCategory('ALL')">All Collections</span>
+            <span class="crumb-separator">&gt;</span>
+            <span class="crumb-item active">${escapeHtml(activeCategory)}</span>
+          `;
+        }
+      } else {
+        const item = libraryData.find(it => it.Creator === activeCollection);
+        const cat = item ? item.Category : activeCategory;
+        breadcrumbs.innerHTML = `
+          <span class="crumb-item" onclick="closeCollection(true)">All Collections</span>
+          <span class="crumb-separator">&gt;</span>
+          <span class="crumb-item" onclick="selectCategory('${escapeHtml(cat).replace(/'/g, "\\'")}', true)">${escapeHtml(cat)}</span>
+          <span class="crumb-separator">&gt;</span>
+          <span class="crumb-item active">${escapeHtml(activeCollection)}</span>
+        `;
+      }
+    }
+
+    function pushNavState(state, updateHash = true) {
+      if (appHistoryIndex >= 0) {
+        const curr = appHistory[appHistoryIndex];
+        if (curr && curr.view === state.view && curr.creator === state.creator && curr.category === state.category) {
+          updateNavUI();
+          return;
+        }
+      }
+      appHistory = appHistory.slice(0, appHistoryIndex + 1);
+      appHistory.push(state);
+      appHistoryIndex = appHistory.length - 1;
+      updateNavUI();
+
+      if (updateHash) {
+        if (state.view === 'collection') {
+          location.hash = 'collection=' + encodeURIComponent(state.creator);
+        } else if (state.category && state.category !== 'ALL') {
+          location.hash = 'category=' + encodeURIComponent(state.category);
+        } else {
+          location.hash = '';
+        }
+      }
+    }
+
+    function navigateHistoryBack() {
+      if (appHistoryIndex > 0) {
+        appHistoryIndex--;
+        applyNavState(appHistory[appHistoryIndex]);
+      } else if (activeCollection) {
+        closeCollection();
+      }
+    }
+
+    function navigateHistoryForward() {
+      if (appHistoryIndex < appHistory.length - 1) {
+        appHistoryIndex++;
+        applyNavState(appHistory[appHistoryIndex]);
+      }
+    }
+
+    function applyNavState(state) {
+      if (!state) return;
+      if (state.view === 'collection' && state.creator) {
+        openCollection(state.creator, false);
+      } else {
+        if (state.category) {
+          activeCategory = state.category;
+          document.querySelectorAll('.chip-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.cat === activeCategory);
+          });
+        }
+        closeCollection(false, false);
+      }
+      updateNavUI();
+    }
+
+    function openCollection(creatorName, pushToHistory = true) {
+      activeCollection = creatorName;
+      singleCollectionSearchQuery = '';
+
+      if (pushToHistory) {
+        pushNavState({ view: 'collection', creator: creatorName });
+      }
+
+      document.getElementById('library-grid').style.display = 'none';
+      document.getElementById('category-chips').style.display = 'none';
+      document.getElementById('pagination-bar').style.display = 'none';
+      const container = document.getElementById('single-collection-container');
+      container.style.display = 'block';
+
+      renderSingleCollection();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      updateNavUI();
+    }
+
+    function closeCollection(resetToAll = false, pushToHistory = true) {
+      activeCollection = null;
+      singleCollectionSearchQuery = '';
+
+      if (resetToAll) {
+        activeCategory = 'ALL';
+        document.querySelectorAll('.chip-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.cat === 'ALL');
+        });
+      }
+
+      if (pushToHistory) {
+        pushNavState({ view: 'gallery', category: activeCategory });
+      }
+
+      document.getElementById('library-grid').style.display = '';
+      document.getElementById('category-chips').style.display = '';
+      document.getElementById('pagination-bar').style.display = '';
+      document.getElementById('single-collection-container').style.display = 'none';
+
+      renderGrid();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      updateNavUI();
+    }
+
+    function getFilteredCollectionsList() {
+      const query = document.getElementById('search-input') ? document.getElementById('search-input').value.toLowerCase().trim() : '';
+      const sortBy = document.getElementById('sort-select') ? document.getElementById('sort-select').value : 'name-asc';
+
+      let filtered = libraryData.filter(item => {
+        const matchesCategory = activeCategory === 'ALL' || item.Category === activeCategory;
+        const matchesSearch = !query || 
+          item.Creator.toLowerCase().includes(query) ||
+          item.Category.toLowerCase().includes(query) ||
+          ((item.Items || []).some(it => it.name.toLowerCase().includes(query))) ||
+          (item.Samples && item.Samples.some(s => s.toLowerCase().includes(query)));
+        const matchesPreview = !onlyPreviewsFilter || (item.PreviewsCount > 0);
+        return matchesCategory && matchesSearch && matchesPreview;
+      });
+
+      filtered.sort((a, b) => {
+        if (sortBy === 'name-asc') return a.Creator.localeCompare(b.Creator);
+        if (sortBy === 'name-desc') return b.Creator.localeCompare(a.Creator);
+        if (sortBy === 'previews-desc') return (b.PreviewsCount || 0) - (a.PreviewsCount || 0);
+        if (sortBy === 'files-desc') return b.TotalFiles - a.TotalFiles;
+        return 0;
+      });
+
+      return filtered;
+    }
+
+    function renderSingleCollection() {
+      if (!activeCollection) return;
+      const container = document.getElementById('single-collection-container');
+      const item = libraryData.find(it => it.Creator === activeCollection);
+      if (!item) {
+        closeCollection();
+        return;
+      }
+
+      const currentList = getFilteredCollectionsList();
+      const currIdx = currentList.findIndex(it => it.Creator === activeCollection);
+      const prevItem = currIdx > 0 ? currentList[currIdx - 1] : null;
+      const nextItem = currIdx >= 0 && currIdx < currentList.length - 1 ? currentList[currIdx + 1] : null;
+
+      const rawItems = item.Items && item.Items.length > 0 ? item.Items : (item.Samples || []).map(s => ({ name: s, thumb: null }));
+      let items = rawItems;
+
+      if (onlyPreviewsFilter) {
+        items = items.filter(it => !!it.thumb);
+      }
+
+      const query = singleCollectionSearchQuery.toLowerCase().trim();
+      if (query) {
+        items = items.filter(it => it.name.toLowerCase().includes(query));
+      }
+
+      const itemsHtml = items.length === 0 
+        ? `<div style="grid-column:1/-1; text-align:center; padding:4rem; color:#94a3b8; font-size:1.1rem; background:#0d1322; border-radius:12px; border:1px solid rgba(255,255,255,0.06);">No files matching current search or previews filter in this collection.</div>`
+        : items.map(it => {
+            const safeName = escapeHtml(it.name);
+            const safeThumb = it.thumb ? escapeHtml(it.thumb) : '';
+
+            const thumbHtml = safeThumb ? `
+              <div class="item-thumb-wrapper" data-thumb="${safeThumb}" data-name="${safeName}" onclick="handleThumbClick(this)" title="Click to enlarge preview">
+                <img src="${safeThumb}" alt="${safeName}" loading="lazy">
+              </div>
+            ` : `
+              <div class="item-thumb-wrapper" title="No render preview available">
+                <div class="item-no-thumb">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.4; margin-bottom:3px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                  <span>No Preview</span>
+                </div>
+              </div>
+            `;
+
+            return `
+              <div class="model-item-row">
+                ${thumbHtml}
+                <div class="item-info">
+                  <div class="item-name" title="${safeName}">${safeName}</div>
+                  <div class="item-meta">
+                    ${getExtensionBadge(it.name)}
+                    ${(libraryMetadata[it.name] && libraryMetadata[it.name].releaseDate && libraryMetadata[it.name].releaseDate !== 'UNKNOWN') ? `
+                      <span class="release-date-badge" title="Release: ${libraryMetadata[it.name].releaseMonth || ''} ${libraryMetadata[it.name].releaseYear || ''} (${libraryMetadata[it.name].method || ''})">
+                        📅 ${libraryMetadata[it.name].releaseDate}
+                      </span>
+                    ` : ''}
+                    ${it.thumb ? '<span style="color:#38bdf8;">• Render preview available</span>' : '<span style="color:#64748b;">• Archive file</span>'}
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+      const prevBtnHtml = prevItem 
+        ? `<button type="button" class="hero-nav-btn" onclick="openCollection('${escapeHtml(prevItem.Creator).replace(/'/g, "\\'")}')" title="Previous collection: ${escapeHtml(prevItem.Creator)}">
+             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+             <span>Prev: ${escapeHtml(prevItem.Creator.length > 18 ? prevItem.Creator.slice(0, 16) + '...' : prevItem.Creator)}</span>
+           </button>`
+        : `<button type="button" class="hero-nav-btn" disabled><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg><span>Prev</span></button>`;
+
+      const nextBtnHtml = nextItem 
+        ? `<button type="button" class="hero-nav-btn" onclick="openCollection('${escapeHtml(nextItem.Creator).replace(/'/g, "\\'")}')" title="Next collection: ${escapeHtml(nextItem.Creator)}">
+             <span>Next: ${escapeHtml(nextItem.Creator.length > 18 ? nextItem.Creator.slice(0, 16) + '...' : nextItem.Creator)}</span>
+             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+           </button>`
+        : `<button type="button" class="hero-nav-btn" disabled><span>Next</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></button>`;
+
+      container.innerHTML = `
+        <div class="single-collection-hero">
+          <div class="single-hero-top">
+            <div class="single-hero-title-area">
+              <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+                <span class="category-tag" style="cursor:pointer;" onclick="selectCategory('${escapeHtml(item.Category).replace(/'/g, "\\'")}', true)" title="Filter by category ${escapeHtml(item.Category)}">${escapeHtml(item.Category)}</span>
+                <span class="hero-position-pill">Collection ${currIdx >= 0 ? currIdx + 1 : 1} of ${currentList.length}</span>
+              </div>
+              <h2 class="single-hero-title">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                ${escapeHtml(item.Creator)}
+              </h2>
+              <div class="file-counts" style="margin-top: 0.25rem;">
+                <span><b>${item.Archives}</b> Zips</span>
+                <span><b>${item.STLs}</b> STLs</span>
+                <span><b>${item.PreviewsCount || 0}</b> Previews</span>
+                <span>Showing <b>${items.length}</b> ${onlyPreviewsFilter ? 'previewed models' : 'total files'}</span>
+              </div>
+            </div>
+
+            <div class="single-hero-nav">
+              ${prevBtnHtml}
+              ${nextBtnHtml}
+              <button type="button" class="hero-nav-btn primary" onclick="closeCollection()" title="Return to collections gallery">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                <span>Back to Gallery</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="single-collection-filter-bar">
+            <input type="text" id="single-search-input" class="single-collection-filter-input" placeholder="Search and filter files inside ${escapeHtml(item.Creator)}..." value="${escapeHtml(singleCollectionSearchQuery)}">
+            <span style="font-size:0.85rem; color:#94a3b8; font-family:'JetBrains Mono', monospace;">
+              ${items.length} files displayed
+            </span>
+          </div>
+        </div>
+
+        <div class="single-collection-grid" id="single-collection-items">
+          ${itemsHtml}
+        </div>
+      `;
+
+      const searchInput = document.getElementById('single-search-input');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          singleCollectionSearchQuery = e.target.value;
+          renderSingleCollection();
+        });
+      }
+    }
+
+    async function initLibrary() {
+      if (typeof libraryData === 'undefined' || !libraryData.length) {
+        console.warn("libraryData not loaded");
+        return;
+      }
+
+      // Load metadata if available
+      try {
+        const res = await fetch('./library_metadata.json');
+        if (res.ok) {
+          libraryMetadata = await res.json();
+        }
+      } catch (e) {
+        console.log("No metadata loaded yet:", e);
+      }
+
+      // Apply saved preferences
+      setThumbSize(currentThumbSize);
+      setViewMode(currentViewMode);
+      const filterBtn = document.getElementById('filter-previews-btn');
+      if (filterBtn) filterBtn.classList.toggle('active', onlyPreviewsFilter);
+
+      // Filter out utility folders from category chips to keep them clean
+      const categories = [...new Set(libraryData.map(item => item.Category))]
+        .filter(cat => !cat.includes("Firmware") && !cat.includes("Resin files"))
+        .sort();
+
+      const chipsContainer = document.getElementById('category-chips');
+      categories.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = 'chip-btn';
+        btn.textContent = cat;
+        btn.dataset.cat = cat;
+        btn.onclick = () => selectCategory(cat);
+        chipsContainer.appendChild(btn);
+      });
+
+      // Stats
+      document.getElementById('stat-collections').textContent = libraryData.length;
+      const totalFiles = libraryData.reduce((acc, curr) => acc + curr.TotalFiles, 0);
+      document.getElementById('stat-files').textContent = totalFiles.toLocaleString();
+      const totalPreviews = libraryData.reduce((acc, curr) => acc + (curr.PreviewsCount || 0), 0);
+      document.getElementById('stat-previews').textContent = totalPreviews.toLocaleString();
+
+      // Check initial hash for deep linking
+      const hash = location.hash.replace(/^#/, '');
+      const params = new URLSearchParams(hash);
+      const collectionParam = params.get('collection');
+      const catParam = params.get('category');
+      if (catParam) {
+        activeCategory = catParam;
+        document.querySelectorAll('.chip-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.cat === catParam);
+        });
+      }
+
+      if (collectionParam) {
+        openCollection(collectionParam, true);
+      } else {
+        pushNavState({ view: 'gallery', category: activeCategory }, false);
+        renderGrid();
+      }
+      updateNavUI();
+    }
+
+    function selectCategory(cat, closeIfOpen = false) {
+      activeCategory = cat;
+      currentPage = 1;
+      document.querySelectorAll('.chip-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.cat === cat);
+      });
+      if (activeCollection && closeIfOpen) {
+        closeCollection(false);
+      } else {
+        pushNavState({ view: 'gallery', category: cat });
+        renderGrid();
+        updateNavUI();
+      }
+    }
+
+    function getExtensionBadge(filename) {
+      const ext = filename.split('.').pop().toLowerCase();
+      if (ext === 'zip') return '<span class="ext-badge zip">ZIP</span>';
+      if (ext === '7z') return '<span class="ext-badge sevenz">7Z</span>';
+      if (ext === 'rar') return '<span class="ext-badge rar">RAR</span>';
+      if (ext === 'stl') return '<span class="ext-badge stl">STL</span>';
+      return `<span class="ext-badge">${ext.toUpperCase()}</span>`;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    const cardExpandedState = {};
+
+    function toggleExpandCard(creatorName) {
+      cardExpandedState[creatorName] = !cardExpandedState[creatorName];
+      renderGrid();
+    }
+
+    function renderGrid() {
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
+      const sortBy = document.getElementById('sort-select').value;
+      const grid = document.getElementById('library-grid');
+
+      let filtered = libraryData.filter(item => {
+        const matchesCategory = activeCategory === 'ALL' || item.Category === activeCategory;
+        const matchesSearch = !query || 
+          item.Creator.toLowerCase().includes(query) ||
+          item.Category.toLowerCase().includes(query) ||
+          ((item.Items || []).some(it => it.name.toLowerCase().includes(query))) ||
+          (item.Samples && item.Samples.some(s => s.toLowerCase().includes(query)));
+        const matchesPreview = !onlyPreviewsFilter || (item.PreviewsCount > 0);
+        return matchesCategory && matchesSearch && matchesPreview;
+      });
+
+      filtered.sort((a, b) => {
+        if (sortBy === 'name-asc') return a.Creator.localeCompare(b.Creator);
+        if (sortBy === 'name-desc') return b.Creator.localeCompare(a.Creator);
+        if (sortBy === 'release-desc') {
+          const dateA = getCollectionReleaseDate(a);
+          const dateB = getCollectionReleaseDate(b);
+          if (dateA && dateB) return dateB.localeCompare(dateA);
+          if (dateA) return -1;
+          if (dateB) return 1;
+          return a.Creator.localeCompare(b.Creator);
+        }
+        if (sortBy === 'release-asc') {
+          const dateA = getCollectionReleaseDate(a);
+          const dateB = getCollectionReleaseDate(b);
+          if (dateA && dateB) return dateA.localeCompare(dateB);
+          if (dateA) return -1;
+          if (dateB) return 1;
+          return a.Creator.localeCompare(b.Creator);
+        }
+        if (sortBy === 'previews-desc') return (b.PreviewsCount || 0) - (a.PreviewsCount || 0);
+        if (sortBy === 'files-desc') return b.TotalFiles - a.TotalFiles;
+        return 0;
+      });
+
+      const indicator = document.getElementById('filter-indicator');
+      if (indicator) {
+        indicator.textContent = `Showing ${filtered.length} collections ${onlyPreviewsFilter ? '• Previews only' : ''}`;
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:5rem; color:#94a3b8; font-size:1.2rem;">No collections found matching this filter.</div>';
+        document.getElementById('pagination-bar').innerHTML = '';
+        return;
+      }
+
+      const totalPages = Math.ceil(filtered.length / itemsPerPage);
+      if (currentPage > totalPages) currentPage = 1;
+      const start = (currentPage - 1) * itemsPerPage;
+      const paged = filtered.slice(start, start + itemsPerPage);
+
+      grid.innerHTML = paged.map(item => {
+        const rawItems = item.Items && item.Items.length > 0 ? item.Items : (item.Samples || []).map(s => ({ name: s, thumb: null }));
+
+        let items = rawItems;
+        if (onlyPreviewsFilter) {
+          items = items.filter(it => !!it.thumb);
+        }
+        if (query) {
+          const matching = items.filter(it => it.name.toLowerCase().includes(query));
+          const nonMatching = items.filter(it => !it.name.toLowerCase().includes(query));
+          items = [...matching, ...nonMatching];
+        }
+
+        const isExpanded = !!cardExpandedState[item.Creator];
+        const initialLimit = 80;
+        const visibleItems = isExpanded ? items : items.slice(0, initialLimit);
+        const hasMore = items.length > initialLimit;
+
+        const itemsHtml = visibleItems.map(it => {
+          const safeName = escapeHtml(it.name);
+          const safeThumb = it.thumb ? escapeHtml(it.thumb) : '';
+
+          const thumbHtml = safeThumb ? `
+            <div class="item-thumb-wrapper" data-thumb="${safeThumb}" data-name="${safeName}" onclick="handleThumbClick(this)" title="Click to enlarge preview">
+              <img src="${safeThumb}" alt="${safeName}" loading="lazy">
+            </div>
+          ` : `
+            <div class="item-thumb-wrapper" title="No render preview available">
+              <div class="item-no-thumb">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="opacity:0.4; margin-bottom:3px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                <span>No Preview</span>
+              </div>
+            </div>
+          `;
+
+          return `
+            <div class="model-item-row">
+              ${thumbHtml}
+              <div class="item-info">
+                <div class="item-name" title="${safeName}">${safeName}</div>
+                <div class="item-meta">
+                  ${getExtensionBadge(it.name)}
+                  ${(libraryMetadata[it.name] && libraryMetadata[it.name].releaseDate && libraryMetadata[it.name].releaseDate !== 'UNKNOWN') ? `
+                    <span class="release-date-badge" title="Release: ${libraryMetadata[it.name].releaseMonth || ''} ${libraryMetadata[it.name].releaseYear || ''} (${libraryMetadata[it.name].method || ''})">
+                      📅 ${libraryMetadata[it.name].releaseDate}
+                    </span>
+                  ` : ''}
+                  ${it.thumb ? '<span style="color:#38bdf8;">• Render preview available</span>' : '<span style="color:#64748b;">• Archive file</span>'}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        const expandBtnHtml = hasMore ? `
+          <button class="chip-btn" style="width:100%; margin-top:0.5rem; justify-content:center; text-align:center; background: rgba(56, 189, 248, 0.12);" onclick="toggleExpandCard('${escapeHtml(item.Creator).replace(/'/g, "\\'")}')">
+            ${isExpanded ? '▲ Show Less' : `▼ Show All (${items.length - initialLimit} more)`}
+          </button>
+        ` : '';
+
+        const safeCreator = escapeHtml(item.Creator);
+        const safeCreatorEsc = safeCreator.replace(/'/g, "\\'");
+        const safeCategory = escapeHtml(item.Category);
+
+        return `
+          <div class="creator-card">
+            <div class="card-header card-header-clickable" onclick="openCollection('${safeCreatorEsc}')" title="Click to view all files in ${safeCreator}">
+              <div>
+                <h3 class="creator-name">${safeCreator}</h3>
+                <span class="category-tag">${safeCategory}</span>
+              </div>
+              <button type="button" class="open-collection-btn" onclick="event.stopPropagation(); openCollection('${safeCreatorEsc}')" title="Open this collection full-screen">
+                <span>View All Files</span>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+
+            <div class="file-counts">
+              <span><b>${item.Archives}</b> Zips</span>
+              <span><b>${item.STLs}</b> STLs</span>
+              <span><b>${item.PreviewsCount || 0}</b> Previews</span>
+            </div>
+
+            <div class="models-list-section">
+              <div class="models-list-header">
+                <span>Files & Model Previews (${items.length})</span>
+                <span style="font-size:0.75rem; color:#64748b; font-weight:normal;">
+                  ${hasMore && !isExpanded ? `Showing 1–${initialLimit} of ${items.length}` : `All ${items.length} files`}
+                </span>
+              </div>
+              <div class="items-container">
+                ${itemsHtml}
+              </div>
+              ${expandBtnHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+      const container = document.getElementById('pagination-bar');
+      if (totalPages <= 1) {
+        container.innerHTML = '';
+        return;
+      }
+
+      let html = `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">Prev</button>`;
+      for (let p = 1; p <= totalPages; p++) {
+        if (p === 1 || p === totalPages || (p >= currentPage - 2 && p <= currentPage + 2)) {
+          html += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="changePage(${p})">${p}</button>`;
+        } else if (p === currentPage - 3 || p === currentPage + 3) {
+          html += `<span style="color: #64748b;">...</span>`;
+        }
+      }
+      html += `<button class="page-btn ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">Next</button>`;
+      container.innerHTML = html;
+    }
+
+    function changePage(p) {
+      currentPage = p;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderGrid();
+    }
+
+    function handleThumbClick(el) {
+      const thumb = el.getAttribute('data-thumb');
+      const name = el.getAttribute('data-name');
+      if (thumb) {
+        openModal(thumb, name);
+      }
+    }
+
+    function openModal(src, caption) {
+      document.getElementById('modal-img').src = src;
+      document.getElementById('modal-caption').textContent = caption;
+      document.getElementById('image-modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('image-modal').classList.remove('active');
+    }
+
+    // Keyboard navigation (ESC to close modal or return to gallery, Alt+Arrows for history)
+    document.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('image-modal');
+      const isModalOpen = modal && modal.classList.contains('active');
+      if (e.key === 'Escape') {
+        if (isModalOpen) {
+          closeModal();
+        } else if (activeCollection) {
+          closeCollection();
+        }
+      }
+      if (e.altKey && e.key === 'ArrowLeft') {
+        navigateHistoryBack();
+      }
+      if (e.altKey && e.key === 'ArrowRight') {
+        navigateHistoryForward();
+      }
+    });
+
+    // Hash change event listener
+    window.addEventListener('hashchange', () => {
+      const hash = location.hash.replace(/^#/, '');
+      const params = new URLSearchParams(hash);
+      const collectionParam = params.get('collection');
+      const catParam = params.get('category');
+
+      if (collectionParam) {
+        if (activeCollection !== collectionParam) {
+          openCollection(collectionParam, false);
+        }
+      } else {
+        if (catParam && catParam !== activeCategory) {
+          activeCategory = catParam;
+          document.querySelectorAll('.chip-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.cat === catParam);
+          });
+        }
+        if (activeCollection) {
+          closeCollection(false, false);
+        } else {
+          renderGrid();
+        }
+      }
+    });
+
+    let searchDebounceTimer = null;
+    document.getElementById('search-input').addEventListener('input', () => {
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        currentPage = 1;
+        renderGrid();
+      }, 180);
+    });
+
+    document.getElementById('sort-select').addEventListener('change', () => {
+      currentPage = 1;
+      renderGrid();
+    });
+
+    window.addEventListener('DOMContentLoaded', initLibrary);
+  </script>
+</body>
+</html>

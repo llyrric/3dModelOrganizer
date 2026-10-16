@@ -1,0 +1,84 @@
+# =====================================================================
+# Git Ignore for 3D Model Organizer & Library Renderer
+# =====================================================================
+
+# --- Secrets & Environment Variables ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.token
+credentials.json
+
+# --- Generated 3D Preview Renders & Images ---
+previews/
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+*.bmp
+*.ico
+*.svg
+
+# --- Large Generated Library Databases & State Files ---
+# Note: library_data.js contains ~85MB of catalog cache generated from local disks
+library_data.js
+library_data.js.bak
+render_progress.json
+api_usage.json
+*.log
+
+# --- Scratch Space & Worker Temporary Directories ---
+scratch/
+tmp/
+temp/
+*.tmp
+
+# --- 3D Model Assets & Archive Files ---
+*.stl
+*.STL
+*.obj
+*.OBJ
+*.3mf
+*.3MF
+*.zip
+*.ZIP
+*.7z
+*.7Z
+*.rar
+*.RAR
+*.tar
+*.gz
+*.ctb
+*.cbddlp
+
+# --- Python Caches & Environments ---
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+venv/
+env/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# --- Operating System & Editor Artifacts ---
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.DS_Store
+$RECYCLE.BIN/
+.idea/
+.vscode/
+*.swp
+*.bak
+
+# --- AI Assistant & System Storage ---
+.system_generated/
+.tempmediaStorage/
+.user_uploaded/
