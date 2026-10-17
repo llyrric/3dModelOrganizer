@@ -1029,6 +1029,474 @@
       opacity: 0.25;
       cursor: not-allowed;
     }
+
+    /* Live Server Status & Reassignment Controls */
+    .server-stat-pill {
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .server-stat-pill:hover {
+      border-color: var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+    }
+    .status-dot-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #94a3b8;
+      display: inline-block;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    .status-dot-indicator.online {
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+    .status-dot-indicator.offline {
+      background: #f59e0b;
+      box-shadow: 0 0 6px rgba(245, 158, 11, 0.5);
+    }
+
+    /* Item Name Row & Move Action Button */
+    .item-name-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      width: 100%;
+    }
+    .item-name-row .item-name {
+      flex: 1;
+      min-width: 0;
+    }
+    .item-move-action-btn {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: #7dd3fc;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.18s ease;
+      line-height: 1.2;
+    }
+    .item-move-action-btn:hover {
+      background: rgba(56, 189, 248, 0.25);
+      border-color: #38bdf8;
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.3);
+    }
+
+    /* Batch Selection Controls */
+    .batch-select-toggle-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #cbd5e1;
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .batch-select-toggle-btn:hover {
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .batch-select-toggle-btn.active {
+      background: var(--accent);
+      color: #090d16;
+      border-color: var(--accent);
+      font-weight: 700;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+    }
+    .item-batch-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: #38bdf8;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .batch-action-bar {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 50px;
+      padding: 0.65rem 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.25);
+      z-index: 999;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .batch-action-bar.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+    .batch-count {
+      font-size: 0.9rem;
+      color: #f8fafc;
+      font-weight: 600;
+    }
+    .batch-count span {
+      color: var(--accent);
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .batch-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .batch-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e1;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .batch-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+    .batch-btn.move-selected {
+      background: var(--accent);
+      color: #090d16;
+      border-color: var(--accent);
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .batch-btn.move-selected:hover {
+      background: #0ea5e9;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+    }
+
+    /* Reassign Modal */
+    .reassign-modal-box {
+      max-width: 680px;
+      width: 92%;
+      background: #0f172a;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 18px;
+      padding: 1.75rem;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modalSlideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .reassign-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .reassign-icon-bubble {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .reassign-target-preview {
+      display: flex;
+      gap: 1.1rem;
+      background: rgba(18, 25, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1rem;
+      align-items: center;
+    }
+    .reassign-thumb-wrap {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .reassign-thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .reassign-no-thumb, .reassign-batch-icon {
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .reassign-target-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex: 1;
+      min-width: 0;
+    }
+    .reassign-target-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      word-break: break-all;
+    }
+    .reassign-target-path {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+    }
+    .reassign-badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .reassign-badge.cat {
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+    .reassign-badge.creator {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.35);
+    }
+    .reassign-disk-info {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .reassign-disk-info code {
+      color: #e2e8f0;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 0.15rem 0.35rem;
+      border-radius: 4px;
+    }
+    .reassign-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    .reassign-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 640px) {
+      .reassign-form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .reassign-field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .reassign-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #94a3b8;
+    }
+    .reassign-select, .reassign-input {
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #f8fafc;
+      padding: 0.6rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .reassign-select:focus, .reassign-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+    }
+    .reassign-checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.82rem;
+      color: #cbd5e1;
+      cursor: pointer;
+      user-select: none;
+    }
+    .reassign-checkbox-label input {
+      accent-color: var(--accent);
+      width: 16px;
+      height: 16px;
+    }
+    .reassign-server-status {
+      font-size: 0.8rem;
+      padding: 0.55rem 0.85rem;
+      border-radius: 8px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .reassign-server-status.offline {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.3);
+      color: #fbbf24;
+    }
+    .reassign-modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      flex-wrap: wrap;
+    }
+    .reassign-btn {
+      padding: 0.6rem 1.25rem;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      border: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .reassign-btn.secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+    }
+    .reassign-btn.secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+    .reassign-btn.primary {
+      background: var(--accent);
+      color: #090d16;
+      font-weight: 700;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.35);
+    }
+    .reassign-btn.primary:hover:not(:disabled) {
+      background: #0ea5e9;
+      box-shadow: 0 0 22px rgba(56, 189, 248, 0.6);
+      transform: translateY(-1px);
+    }
+    .reassign-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .reassign-btn.fallback {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+    .reassign-btn.fallback:hover {
+      background: rgba(245, 158, 11, 0.25);
+    }
+    .reassign-col-btn {
+      background: rgba(168, 85, 247, 0.12);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      color: #c084fc;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s ease;
+    }
+    .reassign-col-btn:hover {
+      background: rgba(168, 85, 247, 0.25);
+      color: #fff;
+      border-color: #a855f7;
+    }
+
+    /* Toast Notifications */
+    .toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      z-index: 10000;
+      pointer-events: none;
+    }
+    .toast-item {
+      background: #0f172a;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 12px;
+      padding: 0.85rem 1.25rem;
+      color: #f8fafc;
+      font-size: 0.9rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      pointer-events: auto;
+      animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes toastIn {
+      from { transform: translateX(50px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .toast-undo-btn {
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .toast-undo-btn:hover {
+      background: #38bdf8;
+      color: #090d16;
+    }
   </style>
 </head>
 <body>
@@ -1042,6 +1510,10 @@
         <div class="stat-pill"><span id="stat-collections">0</span> Collections</div>
         <div class="stat-pill"><span id="stat-files">0</span> Files</div>
         <div class="stat-pill"><span id="stat-previews">0</span> Previews</div>
+        <div class="stat-pill server-stat-pill" id="server-status-pill" onclick="checkServerStatus(true)" title="Server connection status (Click to re-check)">
+          <span class="status-dot-indicator" id="server-status-dot"></span>
+          <span id="server-status-text">Server: Checking...</span>
+        </div>
       </div>
     </div>
 
@@ -1144,6 +1616,153 @@
       <div class="modal-caption" id="modal-caption"></div>
     </div>
   </div>
+
+  <!-- Modal for Reassign & Move File -->
+  <div class="modal-overlay" id="reassign-modal" onclick="closeReassignModal()">
+    <div class="modal-box reassign-modal-box" onclick="event.stopPropagation()">
+      <div class="reassign-modal-header">
+        <div style="display:flex; align-items:center; gap:0.65rem;">
+          <div class="reassign-icon-bubble">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="13" y1="10" x2="16" y2="13"></line><line x1="13" y1="16" x2="16" y2="13"></line></svg>
+          </div>
+          <div>
+            <h3 style="font-size:1.15rem; font-weight:700; color:#fff;" id="reassign-modal-title">Reassign & Move 3D File</h3>
+            <p style="font-size:0.8rem; color:#94a3b8;" id="reassign-modal-subtitle">Move physical file on disk and update library catalog</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeReassignModal()" style="background:transparent; border:none; color:#cbd5e1; font-size:1.5rem; cursor:pointer; line-height:1; padding:0.2rem 0.6rem; border-radius:6px; transition:color 0.15s ease;" title="Close (Esc)">&times;</button>
+      </div>
+
+      <div class="reassign-body">
+        <!-- Target item preview row -->
+        <div class="reassign-target-preview">
+          <div class="reassign-thumb-wrap" id="reassign-preview-thumb"></div>
+          <div class="reassign-target-details">
+            <div class="reassign-target-name" id="reassign-target-name"></div>
+            <div class="reassign-target-path" id="reassign-target-path"></div>
+            <div class="reassign-disk-info" id="reassign-disk-info"></div>
+          </div>
+        </div>
+
+        <!-- Form fields -->
+        <div class="reassign-form">
+          <div class="reassign-form-row">
+            <div class="reassign-field-group">
+              <label class="reassign-label" for="reassign-dest-cat">Destination Category</label>
+              <select id="reassign-dest-cat" class="reassign-select" onchange="onReassignCategoryChange()">
+              </select>
+              <input type="text" id="reassign-new-cat-input" class="reassign-input" placeholder="Type new category name..." style="display:none; margin-top:0.4rem;">
+            </div>
+            <div class="reassign-field-group">
+              <label class="reassign-label" for="reassign-dest-folder">Destination Folder / Creator</label>
+              <input type="text" id="reassign-dest-folder" class="reassign-input" placeholder="Type or select creator folder..." list="reassign-folders-datalist">
+              <datalist id="reassign-folders-datalist"></datalist>
+            </div>
+          </div>
+
+          <div class="reassign-field-group" style="margin-top:0.25rem;">
+            <label class="reassign-label" for="reassign-new-name">Rename File (Optional)</label>
+            <input type="text" id="reassign-new-name" class="reassign-input" placeholder="Leave unchanged to keep filename">
+          </div>
+
+          <div class="reassign-options-row">
+            <label class="reassign-checkbox-label">
+              <input type="checkbox" id="reassign-move-companions" checked>
+              <span>Move companion files (split archive volumes & matching render images)</span>
+            </label>
+          </div>
+
+          <!-- Server connection status inside modal -->
+          <div id="reassign-server-status" class="reassign-server-status">
+            <span class="status-dot-indicator online"></span>
+            <span id="reassign-server-status-msg">Live Server Connected - 1-Click Move Ready</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reassign-modal-footer">
+        <button type="button" class="reassign-btn secondary" onclick="closeReassignModal()">Cancel</button>
+        <button type="button" class="reassign-btn fallback" id="reassign-copy-ps-btn" onclick="copyPowerShellMoveCmd()" title="Copy verified PowerShell Move-Item command">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          <span>Copy PowerShell Cmd</span>
+        </button>
+        <button type="button" class="reassign-btn primary" id="reassign-submit-btn" onclick="executeFileMove()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          <span id="reassign-submit-btn-text">Move File Now</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Reassign Entire Collection -->
+  <div class="modal-overlay" id="reassign-collection-modal" onclick="closeReassignCollectionModal()">
+    <div class="modal-box reassign-modal-box" onclick="event.stopPropagation()">
+      <div class="reassign-modal-header">
+        <div style="display:flex; align-items:center; gap:0.65rem;">
+          <div class="reassign-icon-bubble" style="background:rgba(168,85,247,0.15); border-color:rgba(168,85,247,0.35); color:#c084fc;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><polyline points="12 11 12 17"></polyline><polyline points="9 14 12 17 15 14"></polyline></svg>
+          </div>
+          <div>
+            <h3 style="font-size:1.15rem; font-weight:700; color:#fff;">Reassign Entire Collection Folder</h3>
+            <p style="font-size:0.8rem; color:#94a3b8;">Move all files in this creator folder to another category</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeReassignCollectionModal()" style="background:transparent; border:none; color:#cbd5e1; font-size:1.5rem; cursor:pointer; line-height:1; padding:0.2rem 0.6rem; border-radius:6px; transition:color 0.15s ease;" title="Close (Esc)">&times;</button>
+      </div>
+
+      <div class="reassign-body">
+        <div class="reassign-target-preview">
+          <div class="reassign-thumb-wrap" style="background:rgba(168,85,247,0.1); border-color:rgba(168,85,247,0.3); color:#c084fc;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          </div>
+          <div class="reassign-target-details">
+            <div class="reassign-target-name" id="col-modal-name">Collection Name</div>
+            <div class="reassign-target-path">
+              <span>Current Category:</span>
+              <span class="reassign-badge cat" id="col-modal-current-cat">Category</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reassign-form">
+          <div class="reassign-field-group">
+            <label class="reassign-label" for="col-modal-dest-cat">Move to Category</label>
+            <select id="col-modal-dest-cat" class="reassign-select" onchange="onColModalCategoryChange()">
+            </select>
+            <input type="text" id="col-modal-new-cat-input" class="reassign-input" placeholder="Enter new category name..." style="display:none; margin-top:0.4rem;">
+          </div>
+          <div class="reassign-field-group">
+            <label class="reassign-label" for="col-modal-rename-folder">Rename Folder (Optional)</label>
+            <input type="text" id="col-modal-rename-folder" class="reassign-input">
+          </div>
+        </div>
+      </div>
+
+      <div class="reassign-modal-footer">
+        <button type="button" class="reassign-btn secondary" onclick="closeReassignCollectionModal()">Cancel</button>
+        <button type="button" class="reassign-btn primary" id="col-modal-submit-btn" onclick="executeCollectionMove()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          <span id="col-modal-submit-btn-text">Move Collection Folder</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Floating Action Bar for Batch File Selection -->
+  <div id="batch-action-bar" class="batch-action-bar">
+    <div class="batch-count"><span id="batch-selected-count">0</span> files selected</div>
+    <div class="batch-actions">
+      <button type="button" class="batch-btn" onclick="selectAllBatchItems()">Select All</button>
+      <button type="button" class="batch-btn" onclick="clearBatchSelection()">Clear</button>
+      <button type="button" class="batch-btn move-selected" onclick="openBatchReassignModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        <span>Move Selected Files...</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
 
   <script src="./library_data.js"></script>
   <script>
@@ -1402,6 +2021,9 @@
         items = items.filter(it => it.name.toLowerCase().includes(query));
       }
 
+      const safeCreatorEsc = escapeHtml(item.Creator).replace(/'/g, "\\'");
+      const safeCategoryEsc = escapeHtml(item.Category).replace(/'/g, "\\'");
+
       const itemsHtml = items.length === 0 
         ? `<div style="grid-column:1/-1; text-align:center; padding:4rem; color:#94a3b8; font-size:1.1rem; background:#0d1322; border-radius:12px; border:1px solid rgba(255,255,255,0.06);">No files matching current search or previews filter in this collection.</div>`
         : items.map(it => {
@@ -1421,11 +2043,22 @@
               </div>
             `;
 
+            const batchCheckboxHtml = isBatchMode
+              ? `<input type="checkbox" class="item-batch-checkbox" ${selectedBatchFiles.has(it.name) ? 'checked' : ''} onchange="handleBatchCheckbox(event, '${safeName.replace(/'/g, "\\'")}')" onclick="event.stopPropagation()">`
+              : '';
+
             return `
-              <div class="model-item-row">
+              <div class="model-item-row" data-file="${safeName}">
+                ${batchCheckboxHtml}
                 ${thumbHtml}
                 <div class="item-info">
-                  <div class="item-name" title="${safeName}">${safeName}</div>
+                  <div class="item-name-row">
+                    <div class="item-name" title="${safeName}">${safeName}</div>
+                    <button type="button" class="item-move-action-btn" onclick="openReassignModal(event, '${safeName.replace(/'/g, "\\'")}', '${safeCreatorEsc}', '${safeCategoryEsc}', '${safeThumb}')" title="Move & Reassign to another Category or Folder">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="13" y1="10" x2="16" y2="13"></line><line x1="13" y1="16" x2="16" y2="13"></line></svg>
+                      <span>Move</span>
+                    </button>
+                  </div>
                   <div class="item-meta">
                     ${getExtensionBadge(it.name)}
                     ${(libraryMetadata[it.name] && libraryMetadata[it.name].releaseDate && libraryMetadata[it.name].releaseDate !== 'UNKNOWN') ? `
@@ -1460,6 +2093,10 @@
             <div class="single-hero-title-area">
               <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
                 <span class="category-tag" style="cursor:pointer;" onclick="selectCategory('${escapeHtml(item.Category).replace(/'/g, "\\'")}', true)" title="Filter by category ${escapeHtml(item.Category)}">${escapeHtml(item.Category)}</span>
+                <button type="button" class="reassign-col-btn" onclick="openReassignCollectionModal('${safeCreatorEsc}', '${safeCategoryEsc}')" title="Move this entire collection folder to another category">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><polyline points="12 11 12 17"></polyline><polyline points="9 14 12 17 15 14"></polyline></svg>
+                  <span>Reassign Folder</span>
+                </button>
                 <span class="hero-position-pill">Collection ${currIdx >= 0 ? currIdx + 1 : 1} of ${currentList.length}</span>
               </div>
               <h2 class="single-hero-title">
@@ -1486,6 +2123,10 @@
 
           <div class="single-collection-filter-bar">
             <input type="text" id="single-search-input" class="single-collection-filter-input" placeholder="Search and filter files inside ${escapeHtml(item.Creator)}..." value="${escapeHtml(singleCollectionSearchQuery)}">
+            <button type="button" class="batch-select-toggle-btn ${isBatchMode ? 'active' : ''}" id="batch-toggle-btn" onclick="toggleBatchMode()" title="Select multiple files to move together">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+              <span>${isBatchMode ? 'Done Selecting' : 'Select Files to Move'}</span>
+            </button>
             <span style="font-size:0.85rem; color:#94a3b8; font-family:'JetBrains Mono', monospace;">
               ${items.length} files displayed
             </span>
@@ -1681,6 +2322,11 @@
           items = [...matching, ...nonMatching];
         }
 
+        const safeCreator = escapeHtml(item.Creator);
+        const safeCreatorEsc = safeCreator.replace(/'/g, "\\'");
+        const safeCategory = escapeHtml(item.Category);
+        const safeCategoryEsc = safeCategory.replace(/'/g, "\\'");
+
         const isExpanded = !!cardExpandedState[item.Creator];
         const initialLimit = 80;
         const visibleItems = isExpanded ? items : items.slice(0, initialLimit);
@@ -1704,10 +2350,16 @@
           `;
 
           return `
-            <div class="model-item-row">
+            <div class="model-item-row" data-file="${safeName}">
               ${thumbHtml}
               <div class="item-info">
-                <div class="item-name" title="${safeName}">${safeName}</div>
+                <div class="item-name-row">
+                  <div class="item-name" title="${safeName}">${safeName}</div>
+                  <button type="button" class="item-move-action-btn" onclick="openReassignModal(event, '${safeName.replace(/'/g, "\\'")}', '${safeCreatorEsc}', '${safeCategoryEsc}', '${safeThumb}')" title="Move & Reassign to another Category or Folder">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="13" y1="10" x2="16" y2="13"></line><line x1="13" y1="16" x2="16" y2="13"></line></svg>
+                    <span>Move</span>
+                  </button>
+                </div>
                 <div class="item-meta">
                   ${getExtensionBadge(it.name)}
                   ${(libraryMetadata[it.name] && libraryMetadata[it.name].releaseDate && libraryMetadata[it.name].releaseDate !== 'UNKNOWN') ? `
@@ -1728,16 +2380,18 @@
           </button>
         ` : '';
 
-        const safeCreator = escapeHtml(item.Creator);
-        const safeCreatorEsc = safeCreator.replace(/'/g, "\\'");
-        const safeCategory = escapeHtml(item.Category);
-
         return `
           <div class="creator-card">
             <div class="card-header card-header-clickable" onclick="openCollection('${safeCreatorEsc}')" title="Click to view all files in ${safeCreator}">
               <div>
                 <h3 class="creator-name">${safeCreator}</h3>
-                <span class="category-tag">${safeCategory}</span>
+                <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.25rem;">
+                  <span class="category-tag">${safeCategory}</span>
+                  <button type="button" class="reassign-col-btn" onclick="event.stopPropagation(); openReassignCollectionModal('${safeCreatorEsc}', '${safeCategoryEsc}')" title="Move this entire collection folder to another category">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><polyline points="12 11 12 17"></polyline><polyline points="9 14 12 17 15 14"></polyline></svg>
+                    <span>Move Folder</span>
+                  </button>
+                </div>
               </div>
               <button type="button" class="open-collection-btn" onclick="event.stopPropagation(); openCollection('${safeCreatorEsc}')" title="Open this collection full-screen">
                 <span>View All Files</span>
@@ -1815,11 +2469,22 @@
 
     // Keyboard navigation (ESC to close modal or return to gallery, Alt+Arrows for history)
     document.addEventListener('keydown', (e) => {
-      const modal = document.getElementById('image-modal');
-      const isModalOpen = modal && modal.classList.contains('active');
+      const imgModal = document.getElementById('image-modal');
+      const isImgModalOpen = imgModal && imgModal.classList.contains('active');
+      const reassignModal = document.getElementById('reassign-modal');
+      const isReassignOpen = reassignModal && reassignModal.classList.contains('active');
+      const colModal = document.getElementById('reassign-collection-modal');
+      const isColModalOpen = colModal && colModal.classList.contains('active');
+
       if (e.key === 'Escape') {
-        if (isModalOpen) {
+        if (isImgModalOpen) {
           closeModal();
+        } else if (isReassignOpen) {
+          closeReassignModal();
+        } else if (isColModalOpen) {
+          closeReassignCollectionModal();
+        } else if (isBatchMode) {
+          toggleBatchMode();
         } else if (activeCollection) {
           closeCollection();
         }
@@ -1872,7 +2537,663 @@
       renderGrid();
     });
 
-    window.addEventListener('DOMContentLoaded', initLibrary);
+    // ==========================================
+    // REASSIGNMENT, MOVING & SERVER INTEGRATION
+    // ==========================================
+    const SERVER_API_URL = window.location.protocol.startsWith('http') 
+      ? window.location.origin 
+      : 'http://localhost:8000';
+
+    let isServerOnline = false;
+    let serverStructure = null;
+    let currentReassignTarget = null;
+    let currentBatchTargets = [];
+    let currentCollectionTarget = null;
+
+    // Batch mode state
+    let isBatchMode = false;
+    let selectedBatchFiles = new Set();
+
+    async function checkServerStatus(manual = false) {
+      const statusPill = document.getElementById('server-status-pill');
+      const dot = document.getElementById('server-status-dot');
+      const text = document.getElementById('server-status-text');
+
+      if (text) text.textContent = 'Server: Checking...';
+
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
+        const res = await fetch(`${SERVER_API_URL}/api/status`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (res.ok) {
+          const data = await res.json();
+          isServerOnline = true;
+          if (dot) {
+            dot.className = 'status-dot-indicator online';
+          }
+          if (text) {
+            text.innerHTML = 'Live Server: <b>Active</b>';
+          }
+          if (statusPill) {
+            statusPill.title = `Connected to local server at ${SERVER_API_URL}\nBase storage: ${data.baseDir || 'X:\\3d files\\3d files'}\n1-click automatic moving enabled!`;
+          }
+          if (manual) {
+            showToast('✔ Live server is connected! 1-click automatic moves enabled.', 'success');
+          }
+          fetchLibraryStructure();
+          return true;
+        }
+      } catch (e) {
+        // Server unreachable
+      }
+
+      isServerOnline = false;
+      if (dot) {
+        dot.className = 'status-dot-indicator offline';
+      }
+      if (text) {
+        text.innerHTML = 'Server: <b>Offline</b>';
+      }
+      if (statusPill) {
+        statusPill.title = 'Local server offline. Double-click start_server.bat to enable 1-click auto moves, or copy PowerShell commands.';
+      }
+      if (manual) {
+        showToast('ℹ Local server offline. Run start_server.bat to enable 1-click moves.', 'info');
+      }
+      return false;
+    }
+
+    async function fetchLibraryStructure() {
+      if (!isServerOnline) return;
+      try {
+        const res = await fetch(`${SERVER_API_URL}/api/structure`);
+        if (res.ok) {
+          serverStructure = await res.json();
+        }
+      } catch (e) {
+        console.warn('Could not fetch server structure:', e);
+      }
+    }
+
+    function getAvailableCategories() {
+      if (serverStructure && serverStructure.categories && serverStructure.categories.length) {
+        return serverStructure.categories;
+      }
+      return [...new Set(libraryData.map(item => item.Category))]
+        .filter(cat => !cat.includes("Firmware") && !cat.includes("Resin files"))
+        .sort();
+    }
+
+    function getAvailableFoldersForCategory(category) {
+      if (serverStructure && serverStructure.foldersByCategory && serverStructure.foldersByCategory[category]) {
+        return serverStructure.foldersByCategory[category];
+      }
+      return [...new Set(libraryData.filter(it => it.Category === category).map(it => it.Creator))].sort();
+    }
+
+    function populateReassignCategories(currentCat, currentCreator) {
+      const catSelect = document.getElementById('reassign-dest-cat');
+      const newCatInput = document.getElementById('reassign-new-cat-input');
+      if (newCatInput) newCatInput.style.display = 'none';
+
+      catSelect.innerHTML = '';
+      const categories = getAvailableCategories();
+      categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        if (cat === currentCat) opt.selected = true;
+        catSelect.appendChild(opt);
+      });
+
+      const newOpt = document.createElement('option');
+      newOpt.value = '__NEW__';
+      newOpt.textContent = '+ Create New Category...';
+      catSelect.appendChild(newOpt);
+
+      onReassignCategoryChange(currentCreator);
+    }
+
+    function onReassignCategoryChange(defaultCreator = '') {
+      const catSelect = document.getElementById('reassign-dest-cat');
+      const newCatInput = document.getElementById('reassign-new-cat-input');
+      const folderInput = document.getElementById('reassign-dest-folder');
+      const datalist = document.getElementById('reassign-folders-datalist');
+
+      if (catSelect.value === '__NEW__') {
+        newCatInput.style.display = 'block';
+        newCatInput.value = '';
+        newCatInput.focus();
+        datalist.innerHTML = '';
+        folderInput.value = '';
+        return;
+      } else {
+        newCatInput.style.display = 'none';
+      }
+
+      const selectedCat = catSelect.value;
+      const folders = getAvailableFoldersForCategory(selectedCat);
+
+      datalist.innerHTML = '';
+      folders.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f;
+        datalist.appendChild(opt);
+      });
+
+      if (defaultCreator && folders.includes(defaultCreator)) {
+        folderInput.value = defaultCreator;
+      } else if (folders.length > 0) {
+        folderInput.value = folders[0];
+      } else {
+        folderInput.value = '';
+      }
+    }
+
+    function updateModalServerStatus() {
+      const statusBox = document.getElementById('reassign-server-status');
+      const statusMsg = document.getElementById('reassign-server-status-msg');
+      const copyBtn = document.getElementById('reassign-copy-ps-btn');
+      const submitText = document.getElementById('reassign-submit-btn-text');
+
+      if (isServerOnline) {
+        statusBox.className = 'reassign-server-status';
+        statusMsg.innerHTML = '● Live Server Active &bull; File move will execute immediately on disk';
+        if (copyBtn) copyBtn.style.display = 'inline-flex';
+        if (submitText) submitText.textContent = 'Move File Now';
+      } else {
+        statusBox.className = 'reassign-server-status offline';
+        statusMsg.innerHTML = '○ Local Server Offline &bull; Launch start_server.bat for 1-click moves, or copy command below';
+        if (copyBtn) copyBtn.style.display = 'inline-flex';
+        if (submitText) submitText.textContent = 'Copy Move Command';
+      }
+    }
+
+    function openReassignModal(e, fileName, creatorName, categoryName, thumbUrl) {
+      if (e) e.stopPropagation();
+      currentReassignTarget = { fileName, creatorName, categoryName, thumbUrl };
+      currentBatchTargets = [];
+
+      document.getElementById('reassign-modal-title').textContent = 'Reassign & Move 3D File';
+      document.getElementById('reassign-modal-subtitle').textContent = 'Move physical file on disk and update library catalog';
+
+      const thumbWrap = document.getElementById('reassign-preview-thumb');
+      if (thumbUrl) {
+        thumbWrap.innerHTML = `<img src="${escapeHtml(thumbUrl)}" alt="${escapeHtml(fileName)}">`;
+      } else {
+        thumbWrap.innerHTML = `<div class="reassign-no-thumb"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></div>`;
+      }
+
+      document.getElementById('reassign-target-name').textContent = fileName;
+      document.getElementById('reassign-target-path').innerHTML = `
+        <span class="reassign-badge cat">${escapeHtml(categoryName)}</span>
+        <span style="color:#64748b;">➔</span>
+        <span class="reassign-badge creator">${escapeHtml(creatorName)}</span>
+      `;
+
+      const isExtracted = fileName.includes(' ➔ ');
+      if (isExtracted) {
+        const parentArchive = fileName.split(' ➔ ')[0].trim();
+        document.getElementById('reassign-disk-info').innerHTML = `
+          <span style="color:#38bdf8;">📦 Physical archive on disk:</span> <code>${escapeHtml(parentArchive)}</code>
+          <div style="color:#94a3b8; font-size:0.75rem; margin-top:2px;">Moving this item moves the parent archive and all its contained 3D models together.</div>
+        `;
+      } else {
+        document.getElementById('reassign-disk-info').innerHTML = `
+          <span style="color:#94a3b8;">Physical file on disk:</span> <code>${escapeHtml(fileName)}</code>
+        `;
+      }
+
+      populateReassignCategories(categoryName, creatorName);
+
+      const diskFile = isExtracted ? fileName.split(' ➔ ')[0].trim() : fileName;
+      const renameInput = document.getElementById('reassign-new-name');
+      renameInput.value = diskFile;
+      renameInput.disabled = false;
+      renameInput.placeholder = 'Leave unchanged to keep filename';
+
+      updateModalServerStatus();
+      document.getElementById('reassign-modal').classList.add('active');
+    }
+
+    function closeReassignModal() {
+      document.getElementById('reassign-modal').classList.remove('active');
+    }
+
+    function openBatchReassignModal() {
+      if (selectedBatchFiles.size === 0) {
+        showToast('Please select at least one file first.', 'info');
+        return;
+      }
+
+      const item = libraryData.find(it => it.Creator === activeCollection);
+      const categoryName = item ? item.Category : activeCategory;
+      const creatorName = activeCollection;
+
+      currentBatchTargets = Array.from(selectedBatchFiles).map(fName => ({
+        fileName: fName,
+        creatorName: creatorName,
+        categoryName: categoryName
+      }));
+      currentReassignTarget = null;
+
+      document.getElementById('reassign-modal-title').textContent = `Reassign & Move ${currentBatchTargets.length} Files`;
+      document.getElementById('reassign-modal-subtitle').textContent = `Move selected files from ${categoryName} / ${creatorName} to another folder`;
+
+      const thumbWrap = document.getElementById('reassign-preview-thumb');
+      thumbWrap.innerHTML = `<div class="reassign-batch-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path><polyline points="12 11 12 17"></polyline><polyline points="9 14 12 17 15 14"></polyline></svg></div>`;
+
+      document.getElementById('reassign-target-name').textContent = `${currentBatchTargets.length} Files Selected`;
+      document.getElementById('reassign-target-path').innerHTML = `
+        <span class="reassign-badge cat">${escapeHtml(categoryName)}</span>
+        <span style="color:#64748b;">➔</span>
+        <span class="reassign-badge creator">${escapeHtml(creatorName)}</span>
+      `;
+      document.getElementById('reassign-disk-info').innerHTML = `
+        <div style="max-height:80px; overflow-y:auto; font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:#94a3b8; background:rgba(0,0,0,0.3); padding:0.4rem; border-radius:6px;">
+          ${currentBatchTargets.map(t => escapeHtml(t.fileName)).join('<br>')}
+        </div>
+      `;
+
+      populateReassignCategories(categoryName, creatorName);
+      const renameInput = document.getElementById('reassign-new-name');
+      renameInput.value = '';
+      renameInput.placeholder = 'Rename not available during batch moves';
+      renameInput.disabled = true;
+
+      updateModalServerStatus();
+      document.getElementById('reassign-modal').classList.add('active');
+    }
+
+    function toggleBatchMode() {
+      isBatchMode = !isBatchMode;
+      if (!isBatchMode) {
+        clearBatchSelection();
+      }
+      renderSingleCollection();
+      updateBatchActionBar();
+    }
+
+    function handleBatchCheckbox(e, fileName) {
+      if (e.target.checked) {
+        selectedBatchFiles.add(fileName);
+      } else {
+        selectedBatchFiles.delete(fileName);
+      }
+      updateBatchActionBar();
+    }
+
+    function selectAllBatchItems() {
+      const item = libraryData.find(it => it.Creator === activeCollection);
+      if (!item) return;
+      const rawItems = item.Items && item.Items.length > 0 ? item.Items : (item.Samples || []).map(s => ({ name: s }));
+      rawItems.forEach(it => selectedBatchFiles.add(it.name));
+      renderSingleCollection();
+      updateBatchActionBar();
+    }
+
+    function clearBatchSelection() {
+      selectedBatchFiles.clear();
+      updateBatchActionBar();
+      if (activeCollection) {
+        document.querySelectorAll('.item-batch-checkbox').forEach(cb => cb.checked = false);
+      }
+    }
+
+    function updateBatchActionBar() {
+      const bar = document.getElementById('batch-action-bar');
+      const countEl = document.getElementById('batch-selected-count');
+      if (!bar) return;
+
+      if (isBatchMode && selectedBatchFiles.size > 0) {
+        if (countEl) countEl.textContent = selectedBatchFiles.size;
+        bar.classList.add('visible');
+      } else {
+        bar.classList.remove('visible');
+      }
+    }
+
+    function openReassignCollectionModal(creatorName, categoryName) {
+      currentCollectionTarget = { creatorName, categoryName };
+
+      document.getElementById('col-modal-name').textContent = creatorName;
+      document.getElementById('col-modal-current-cat').textContent = categoryName;
+
+      const catSelect = document.getElementById('col-modal-dest-cat');
+      const newCatInput = document.getElementById('col-modal-new-cat-input');
+      if (newCatInput) newCatInput.style.display = 'none';
+
+      catSelect.innerHTML = '';
+      const categories = getAvailableCategories();
+      categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat + (cat === categoryName ? ' (Current)' : '');
+        if (cat === categoryName) opt.selected = true;
+        catSelect.appendChild(opt);
+      });
+
+      const newOpt = document.createElement('option');
+      newOpt.value = '__NEW__';
+      newOpt.textContent = '+ Create New Category...';
+      catSelect.appendChild(newOpt);
+
+      document.getElementById('col-modal-rename-folder').value = creatorName;
+      document.getElementById('reassign-collection-modal').classList.add('active');
+    }
+
+    function onColModalCategoryChange() {
+      const catSelect = document.getElementById('col-modal-dest-cat');
+      const newCatInput = document.getElementById('col-modal-new-cat-input');
+      if (catSelect.value === '__NEW__') {
+        newCatInput.style.display = 'block';
+        newCatInput.value = '';
+        newCatInput.focus();
+      } else {
+        newCatInput.style.display = 'none';
+      }
+    }
+
+    function closeReassignCollectionModal() {
+      document.getElementById('reassign-collection-modal').classList.remove('active');
+    }
+
+    async function executeCollectionMove() {
+      if (!currentCollectionTarget) return;
+
+      const catSelect = document.getElementById('col-modal-dest-cat');
+      let destCat = catSelect.value;
+      if (destCat === '__NEW__') {
+        destCat = (document.getElementById('col-modal-new-cat-input')?.value || '').trim();
+        if (!destCat) {
+          alert('Please enter a new category name.');
+          return;
+        }
+      }
+
+      const destCreator = (document.getElementById('col-modal-rename-folder').value || '').trim() || currentCollectionTarget.creatorName;
+      const submitBtn = document.getElementById('col-modal-submit-btn');
+      const submitText = document.getElementById('col-modal-submit-btn-text');
+
+      if (isServerOnline) {
+        submitBtn.disabled = true;
+        submitText.textContent = 'Moving Collection...';
+
+        try {
+          const res = await fetch(`${SERVER_API_URL}/api/move-collection`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              sourceCategory: currentCollectionTarget.categoryName,
+              sourceCreator: currentCollectionTarget.creatorName,
+              destCategory: destCat,
+              destCreator: destCreator
+            })
+          });
+          const data = await res.json();
+          if (data.success) {
+            const col = libraryData.find(c => c.Category === currentCollectionTarget.categoryName && c.Creator === currentCollectionTarget.creatorName);
+            if (col) {
+              col.Category = destCat;
+              col.Creator = destCreator;
+            }
+            closeReassignCollectionModal();
+            showToast(`✅ Collection '${currentCollectionTarget.creatorName}' moved to '${destCat}'!`, 'success');
+            if (activeCollection) {
+              activeCollection = destCreator;
+              renderSingleCollection();
+            } else {
+              renderGrid();
+            }
+            updateNavUI();
+          } else {
+            alert('Failed to move collection: ' + (data.error || 'Unknown error'));
+          }
+        } catch (err) {
+          alert('Error contacting server: ' + err.message);
+        } finally {
+          submitBtn.disabled = false;
+          submitText.textContent = 'Move Collection Folder';
+        }
+      } else {
+        const psCmd = `Move-Item -LiteralPath "X:\\3d files\\3d files\\${currentCollectionTarget.categoryName}\\${currentCollectionTarget.creatorName}" -Destination "X:\\3d files\\3d files\\${destCat}\\${destCreator}" -Force`;
+        navigator.clipboard.writeText(psCmd);
+        showToast('📋 Copied PowerShell move command to clipboard! (Launch start_server.bat for auto-moves)', 'info');
+        closeReassignCollectionModal();
+      }
+    }
+
+    async function executeFileMove() {
+      const submitBtn = document.getElementById('reassign-submit-btn');
+      const submitText = document.getElementById('reassign-submit-btn-text');
+      const catSelect = document.getElementById('reassign-dest-cat');
+      let destCat = catSelect.value;
+      if (destCat === '__NEW__') {
+        destCat = (document.getElementById('reassign-new-cat-input')?.value || '').trim();
+        if (!destCat) {
+          alert('Please enter a new category name.');
+          return;
+        }
+      }
+
+      const destFolder = (document.getElementById('reassign-dest-folder').value || '').trim();
+      if (!destFolder) {
+        alert('Please select or enter a destination creator folder.');
+        return;
+      }
+
+      const moveCompanions = document.getElementById('reassign-move-companions').checked;
+      const newName = (document.getElementById('reassign-new-name').value || '').trim();
+
+      if (isServerOnline) {
+        submitBtn.disabled = true;
+        submitText.textContent = 'Moving File(s)...';
+
+        try {
+          if (currentBatchTargets && currentBatchTargets.length > 0) {
+            const payload = {
+              files: currentBatchTargets.map(t => ({
+                sourceCategory: t.categoryName,
+                sourceCreator: t.creatorName,
+                fileName: t.fileName
+              })),
+              destCategory: destCat,
+              destCreator: destFolder,
+              moveCompanions: moveCompanions
+            };
+
+            const res = await fetch(`${SERVER_API_URL}/api/batch-move`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if (data.success || data.movedCount > 0) {
+              currentBatchTargets.forEach(t => {
+                applyLocalMove(t.categoryName, t.creatorName, t.fileName, destCat, destFolder, null);
+              });
+              closeReassignModal();
+              clearBatchSelection();
+              toggleBatchMode();
+              showToast(`✅ Moved ${data.movedCount} files to ${destCat} / ${destFolder}!`, 'success', true);
+            } else {
+              alert('Batch move error: ' + (data.errors ? JSON.stringify(data.errors) : (data.error || 'Unknown error')));
+            }
+          } else if (currentReassignTarget) {
+            const payload = {
+              sourceCategory: currentReassignTarget.categoryName,
+              sourceCreator: currentReassignTarget.creatorName,
+              fileName: currentReassignTarget.fileName,
+              destCategory: destCat,
+              destCreator: destFolder,
+              newFileName: (newName && newName !== currentReassignTarget.fileName) ? newName : null,
+              moveCompanions: moveCompanions
+            };
+
+            const res = await fetch(`${SERVER_API_URL}/api/move-file`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if (data.success) {
+              applyLocalMove(
+                currentReassignTarget.categoryName,
+                currentReassignTarget.creatorName,
+                currentReassignTarget.fileName,
+                destCat,
+                destFolder,
+                data.destination?.file || newName
+              );
+              closeReassignModal();
+              showToast(`✅ Successfully moved to ${destCat} / ${destFolder}!`, 'success', true);
+            } else {
+              alert('Move failed: ' + (data.error || 'Unknown error'));
+            }
+          }
+        } catch (err) {
+          alert('Network or server error: ' + err.message);
+        } finally {
+          submitBtn.disabled = false;
+          submitText.textContent = 'Move File Now';
+        }
+      } else {
+        copyPowerShellMoveCmd();
+        showToast('📋 Copied PowerShell move command to clipboard! (Launch start_server.bat for auto-moves)', 'info');
+        closeReassignModal();
+      }
+    }
+
+    function applyLocalMove(srcCat, srcCreator, fileName, destCat, destCreator, targetFileName) {
+      const diskFileName = fileName.includes(' ➔ ') ? fileName.split(' ➔ ')[0].trim() : fileName;
+      const finalFileName = targetFileName || diskFileName;
+
+      const srcCol = libraryData.find(c => c.Category === srcCat && c.Creator === srcCreator);
+      let destCol = libraryData.find(c => c.Category === destCat && c.Creator === destCreator);
+      if (!destCol) {
+        destCol = {
+          Category: destCat,
+          Creator: destCreator,
+          TotalFiles: 0,
+          Archives: 0,
+          STLs: 0,
+          PreviewsCount: 0,
+          Thumbnails: [],
+          Items: [],
+          Samples: []
+        };
+        libraryData.push(destCol);
+      }
+
+      if (srcCol) {
+        const movingItems = (srcCol.Items || []).filter(it => it.name === diskFileName || it.name.startsWith(diskFileName + ' ➔ '));
+        srcCol.Items = (srcCol.Items || []).filter(it => it.name !== diskFileName && !it.name.startsWith(diskFileName + ' ➔ '));
+        movingItems.forEach(it => {
+          if (finalFileName !== diskFileName) {
+            it.name = it.name === diskFileName ? finalFileName : finalFileName + ' ➔ ' + it.name.split(' ➔ ')[1];
+          }
+          destCol.Items.push(it);
+        });
+
+        const movingThumbs = (srcCol.Thumbnails || []).filter(th => th.Name === diskFileName || th.Name.startsWith(diskFileName + ' ➔ '));
+        srcCol.Thumbnails = (srcCol.Thumbnails || []).filter(th => th.Name !== diskFileName && !th.Name.startsWith(diskFileName + ' ➔ '));
+        movingThumbs.forEach(th => {
+          if (finalFileName !== diskFileName) {
+            th.Name = th.Name === diskFileName ? finalFileName : finalFileName + ' ➔ ' + th.Name.split(' ➔ ')[1];
+          }
+          destCol.Thumbnails.push(th);
+        });
+
+        const movingSamples = (srcCol.Samples || []).filter(s => s === diskFileName || s.startsWith(diskFileName + ' ➔ '));
+        srcCol.Samples = (srcCol.Samples || []).filter(s => s !== diskFileName && !s.startsWith(diskFileName + ' ➔ '));
+        movingSamples.forEach(s => {
+          destCol.Samples.push(finalFileName !== diskFileName ? (s === diskFileName ? finalFileName : finalFileName + ' ➔ ' + s.split(' ➔ ')[1]) : s);
+        });
+
+        [srcCol, destCol].forEach(col => {
+          col.TotalFiles = (col.Items || []).length;
+          col.Archives = (col.Items || []).filter(it => /\.(zip|7z|rar)$/i.test(it.name) && !it.name.includes(' ➔ ')).length;
+          col.STLs = (col.Items || []).filter(it => /\.(stl|obj)$/i.test(it.name) && !it.name.includes(' ➔ ')).length;
+          col.PreviewsCount = (col.Thumbnails || []).length;
+        });
+      }
+
+      if (activeCollection) {
+        if (activeCollection === srcCreator && srcCol && srcCol.Items.length === 0) {
+          closeCollection(false, false);
+        } else {
+          renderSingleCollection();
+        }
+      } else {
+        renderGrid();
+      }
+    }
+
+    function copyPowerShellMoveCmd() {
+      let destCat = document.getElementById('reassign-dest-cat').value;
+      if (destCat === '__NEW__') destCat = document.getElementById('reassign-new-cat-input').value.trim();
+      const destFolder = document.getElementById('reassign-dest-folder').value.trim();
+
+      let cmd = '';
+      if (currentBatchTargets && currentBatchTargets.length > 0) {
+        cmd = currentBatchTargets.map(t => {
+          const disk = t.fileName.includes(' ➔ ') ? t.fileName.split(' ➔ ')[0].trim() : t.fileName;
+          return `Move-Item -LiteralPath "X:\\3d files\\3d files\\${t.categoryName}\\${t.creatorName}\\${disk}" -Destination "X:\\3d files\\3d files\\${destCat}\\${destFolder}" -Force`;
+        }).join('\n');
+      } else if (currentReassignTarget) {
+        const disk = currentReassignTarget.fileName.includes(' ➔ ') ? currentReassignTarget.fileName.split(' ➔ ')[0].trim() : currentReassignTarget.fileName;
+        const newName = (document.getElementById('reassign-new-name').value || '').trim() || disk;
+        cmd = `Move-Item -LiteralPath "X:\\3d files\\3d files\\${currentReassignTarget.categoryName}\\${currentReassignTarget.creatorName}\\${disk}" -Destination "X:\\3d files\\3d files\\${destCat}\\${destFolder}\\${newName}" -Force`;
+      }
+
+      navigator.clipboard.writeText(cmd);
+      showToast('📋 Copied PowerShell move command to clipboard!', 'info');
+    }
+
+    function showToast(message, type = 'info', allowUndo = false) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = 'toast-item';
+      toast.innerHTML = `
+        <span style="flex:1;">${escapeHtml(message)}</span>
+        ${allowUndo ? `<button type="button" class="toast-undo-btn" onclick="undoLastMove(this)">Undo</button>` : ''}
+      `;
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 5500);
+    }
+
+    async function undoLastMove(btn) {
+      if (btn) btn.disabled = true;
+      try {
+        const res = await fetch(`${SERVER_API_URL}/api/undo`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('✔ Move successfully undone! Reloading catalog view...', 'success');
+          setTimeout(() => window.location.reload(), 1200);
+        } else {
+          alert('Undo failed: ' + (data.message || 'Unknown error'));
+        }
+      } catch (e) {
+        alert('Undo error: ' + e.message);
+      }
+    }
+
+    async function initLibraryWrapper() {
+      await initLibrary();
+      checkServerStatus();
+    }
+
+    window.addEventListener('DOMContentLoaded', initLibraryWrapper);
   </script>
 </body>
 </html>

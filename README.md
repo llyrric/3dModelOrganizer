@@ -109,12 +109,28 @@ graph TD
   cp .env.example .env
   ```
 
-### Viewing the Gallery
+### Viewing the Gallery & Live Reassignment Server
 
-1. Double-click or open [`index.html`](index.html) in any modern web browser (or serve with `python -m http.server 8000`).
-2. Use the **Category Chips** at the top to filter by genre (e.g., *Fantasy*, *Sci-Fi*, *Terrain*).
-3. Use the **Search Bar** to instantly find creators or specific models.
-4. Click on any creator card to open the **Collection Inspector Modal** and browse all individual models and renders.
+1. **Quick Launch:** Double-click [`start_server.bat`](start_server.bat) (or run `python server.py`) to launch the local server and automatically open the gallery at `http://localhost:8000`.
+2. **Reassigning Files from the Browser:**
+   - In any collection or card view, click the **Move** button on any file/archive item.
+   - Choose or type a destination **Category** and **Folder / Creator** name.
+   - Click **Move File Now** — the file is physically moved on disk (`X:\3d files\3d files`), companion split volumes / preview renders are moved with it, and the web catalog updates in real-time with zero reload delay!
+3. **Batch Moving Multiple Files:**
+   - Inside any collection, click **Select Files to Move**. Check the items you want to migrate, and click **Move Selected Files...** in the bottom floating toolbar.
+4. **Moving Entire Collections:**
+   - Click **Reassign Folder** in the collection header to migrate the whole creator folder to a different category in one step.
+5. **Interactive CLI / Terminal Tool (`reassign_file.py`):**
+   ```powershell
+   # Interactive terminal wizard:
+   python reassign_file.py
+
+   # Direct command-line move:
+   python reassign_file.py --file "Model.zip" --to-cat "sci fi" --to-folder "StationForge"
+
+   # Undo the last move operation:
+   python reassign_file.py --undo
+   ```
 
 ### Running the Parallel 3D Rendering Pipeline
 

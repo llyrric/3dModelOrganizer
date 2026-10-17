@@ -241,7 +241,7 @@ def discover_tasks_for_folder(target_folder):
                                 'display_name': f"{os.path.basename(full_p)} ➔ {os.path.basename(s)}"
                             })
                 except Exception:
-                    pass
+                    seven_z_files.append(full_p)
 
             elif ext in ['.7z', '.rar']:
                 seven_z_files.append(full_p)
@@ -286,11 +286,37 @@ def render_worker_task(task):
         if t_type == 'zip_stl':
             arch_p = task['arch_path']
             inner_p = task['inner_path']
-            with zipfile.ZipFile(arch_p, 'r') as z:
-                stl_data = z.read(inner_p)
-                mesh = load_mesh_safely(stl_data, is_path=False)
-                if mesh is not None and hasattr(mesh, 'vertices') and len(mesh.vertices) > 0:
-                    success = render_mesh_to_thumb(mesh, out_path)
+            try:
+                with zipfile.ZipFile(arch_p, 'r') as z:
+                    stl_data = z.read(inner_p)
+                    mesh = load_mesh_safely(stl_data, is_path=False)
+                    if mesh is not None and hasattr(mesh, 'vertices') and len(mesh.vertices) > 0:
+                        success = render_mesh_to_thumb(mesh, out_path)
+            except Exception:
+                # Fallback to 7-zip for multi-part or split zips (.z01)
+                worker_scratch = os.path.join(TEMP_BASE, f"w_{uuid.uuid4().hex[:6]}")
+                os.makedirs(worker_scratch, exist_ok=True)
+                s_base = os.path.basename(inner_p.replace('\\', '/'))
+                try:
+                    cmd = [SEVEN_ZIP, 'e', f'-o{worker_scratch}', '-p-', '-y', arch_p, inner_p]
+                    subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30)
+                    temp_f = os.path.join(worker_scratch, s_base)
+                    if not os.path.exists(temp_f):
+                        cands = [os.path.join(worker_scratch, x) for x in os.listdir(worker_scratch) if x.lower().endswith('.stl')]
+                        if cands:
+                            temp_f = cands[0]
+                    if os.path.exists(temp_f):
+                        mesh = load_mesh_safely(temp_f, is_path=True)
+                        if mesh is not None and hasattr(mesh, 'vertices') and len(mesh.vertices) > 0:
+                            success = render_mesh_to_thumb(mesh, out_path)
+                finally:
+                    try:
+                        if os.path.exists(worker_scratch):
+                            for f in os.listdir(worker_scratch):
+                                os.remove(os.path.join(worker_scratch, f))
+                            os.rmdir(worker_scratch)
+                    except Exception:
+                        pass
 
         elif t_type == 'loose_stl':
             stl_p = task['stl_path']
@@ -337,7 +363,7 @@ def update_progress_file(data):
     except:
         pass
 
-def render_category(cat_name, cat_path, workers=DEFAULT_WORKERS, force=True, global_stats=None):
+def render_category(cat_name, cat_path, workers=DEFAULT_WORKERS, force=True, outdated_only=False, global_stats=None):
     print(f"\n=======================================================")
     print(f" Category: {cat_name.upper()} ({cat_path})")
     print(f"=======================================================")
@@ -347,7 +373,11 @@ def render_category(cat_name, cat_path, workers=DEFAULT_WORKERS, force=True, glo
     total_found = len(tasks)
     print(f"Discovered {total_found} candidate STLs in {cat_name}.")
 
-    if not force:
+    if outdated_only:
+        cutoff = datetime.datetime(2026, 10, 15, 12, 0).timestamp()
+        tasks = [t for t in tasks if not os.path.exists(t['out_path']) or os.path.getmtime(t['out_path']) < cutoff]
+        print(f"Filtered to outdated/missing renders: {len(tasks)} remaining to process.")
+    elif not force:
         tasks = [t for t in tasks if not os.path.exists(t['out_path'])]
         print(f"Skipping existing renders. {len(tasks)} remaining to process.")
 
@@ -399,18 +429,21 @@ def main():
     parser.add_argument("--root", type=str, default=ROOT_DIR, help="Root library directory")
     parser.add_argument("--workers", type=int, default=DEFAULT_WORKERS, help="Worker processes count")
     parser.add_argument("--no-force", action="store_true", help="Skip existing renders")
+    parser.add_argument("--outdated-only", action="store_true", help="Re-render only models with missing or pre-fix (old) thumbnails")
     parser.add_argument("--category", type=str, default=None, help="Process only a specific category")
+    parser.add_argument("--categories", nargs="+", default=None, help="Process a list of specific categories")
     parser.add_argument("--start-category", type=str, default=None, help="Start processing from this category onwards")
     parser.add_argument("--init-completed", type=int, default=0, help="Initial completed model count for global stats")
     parser.add_argument("--init-succeeded", type=int, default=0, help="Initial succeeded model count for global stats")
     parser.add_argument("--init-elapsed", type=float, default=0.0, help="Initial elapsed seconds for global stats")
     args = parser.parse_args()
 
+    mode_str = "RE-RENDER OUTDATED/MISSING" if args.outdated_only else ("SKIP EXISTING" if args.no_force else "OVERWRITE (Force)")
     print(f"=======================================================")
     print(f" 3D PRINTING LIBRARY PARALLEL RENDERER (8 WORKERS)")
     print(f" Root: {args.root}")
     print(f" Workers: {args.workers}")
-    print(f" Overwrite Mode: {'OVERWRITE (Force)' if not args.no_force else 'SKIP EXISTING'}")
+    print(f" Overwrite Mode: {mode_str}")
     print(f"=======================================================\n")
 
     # Discover categories
@@ -421,6 +454,16 @@ def main():
             categories.append((os.path.basename(cat_p), cat_p))
         else:
             print(f"Category folder not found: {cat_p}")
+            return
+    elif args.categories:
+        for c in args.categories:
+            cat_p = os.path.join(args.root, c) if not os.path.isabs(c) else c
+            if os.path.exists(cat_p):
+                categories.append((os.path.basename(cat_p), cat_p))
+            else:
+                print(f"Warning: Category folder not found: {cat_p}")
+        if not categories:
+            print("No valid categories specified.")
             return
     else:
         # Scan top-level folders in root
@@ -470,6 +513,7 @@ def main():
             cat_path=cat_path,
             workers=args.workers,
             force=not args.no_force,
+            outdated_only=args.outdated_only,
             global_stats=global_stats
         )
         global_stats['completed'] += done
